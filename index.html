@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent Orchestrator</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1>🤖 Agent Builder</h1>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <button class="nav-item active" data-view="builder">
+                    <span class="icon">⚙️</span>
+                    <span>Builder</span>
+                </button>
+                <button class="nav-item" data-view="preview">
+                    <span class="icon">▶️</span>
+                    <span>Preview</span>
+                </button>
+                <button class="nav-item" data-view="published">
+                    <span class="icon">📦</span>
+                    <span>Published</span>
+                </button>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Builder View -->
+            <div class="view active" id="builder-view">
+                <div class="view-header">
+                    <h2>Build Your Agent Workflow</h2>
+                    <button class="btn btn-primary" id="save-workflow">Save Workflow</button>
+                </div>
+
+                <div class="builder-grid">
+                    <!-- Agents Section -->
+                    <section class="builder-section">
+                        <h3>Agents</h3>
+                        <div class="agents-list">
+                            <div class="agent-card" data-agent="sessions">
+                                <div class="agent-header">
+                                    <input type="text" value="Sessions Agent" class="agent-name">
+                                    <span class="agent-status">Active</span>
+                                </div>
+                                <textarea class="agent-prompt" placeholder="System prompt for this agent...">You are a helpful sessions agent that provides information about scheduled events and sessions. Always respond with accurate scheduling information.</textarea>
+                                
+                                <div class="agent-settings">
+                                    <label>TTS Voice:</label>
+                                    <select class="tts-voice">
+                                        <option value="en-female">English Female</option>
+                                        <option value="en-male">English Male</option>
+                                        <option value="es-female">Spanish Female</option>
+                                        <option value="es-male">Spanish Male</option>
+                                    </select>
+                                </div>
+
+                                <div class="agent-widgets">
+                                    <label>Attached Widgets:</label>
+                                    <div class="widget-tags">
+                                        <span class="widget-tag">Schedule Widget</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="agent-card" data-agent="general">
+                                <div class="agent-header">
+                                    <input type="text" value="General Agent" class="agent-name">
+                                    <span class="agent-status">Active</span>
+                                </div>
+                                <textarea class="agent-prompt" placeholder="System prompt for this agent...">You are a helpful general-purpose assistant. Answer questions clearly and concisely.</textarea>
+                                
+                                <div class="agent-settings">
+                                    <label>TTS Voice:</label>
+                                    <select class="tts-voice">
+                                        <option value="en-male" selected>English Male</option>
+                                        <option value="en-female">English Female</option>
+                                        <option value="es-female">Spanish Female</option>
+                                        <option value="es-male">Spanish Male</option>
+                                    </select>
+                                </div>
+
+                                <div class="agent-widgets">
+                                    <label>Attached Widgets:</label>
+                                    <div class="widget-tags">
+                                        <button class="btn-small add-widget">+ Add Widget</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Classifier Section -->
+                    <section class="builder-section">
+                        <h3>Classifier</h3>
+                        <div class="classifier-card">
+                            <textarea class="classifier-prompt" placeholder="Classification logic...">Analyze the user query and determine which agent should handle it:
+
+- If the query is about schedules, sessions, events, appointments, or time-related matters, respond with: "sessions"
+- For all other queries, respond with: "general"
+
+Respond with only the agent name.</textarea>
+                        </div>
+                    </section>
+
+                    <!-- Guardrails Section -->
+                    <section class="builder-section">
+                        <h3>Security Guardrails</h3>
+                        <div class="guardrails-card">
+                            <div class="guardrail-item">
+                                <input type="checkbox" id="pii-protection" checked>
+                                <label for="pii-protection">
+                                    <strong>PII Protection</strong>
+                                    <span class="help-text">Prevent agents from sharing personally identifiable information</span>
+                                </label>
+                            </div>
+                            <div class="guardrail-item">
+                                <input type="checkbox" id="hallucination-check" checked>
+                                <label for="hallucination-check">
+                                    <strong>Hallucination Prevention</strong>
+                                    <span class="help-text">Verify responses against provided context</span>
+                                </label>
+                            </div>
+                            <div class="guardrail-item">
+                                <input type="checkbox" id="content-filter" checked>
+                                <label for="content-filter">
+                                    <strong>Content Filtering</strong>
+                                    <span class="help-text">Block inappropriate or harmful content</span>
+                                </label>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Widgets Section -->
+                    <section class="builder-section">
+                        <h3>Available Widgets</h3>
+                        <div class="widgets-list">
+                            <div class="widget-card" data-widget="schedule">
+                                <h4>📅 Schedule Widget</h4>
+                                <p>Displays daily schedule and events</p>
+                                <button class="btn-small preview-widget">Preview</button>
+                            </div>
+                            <div class="widget-card" data-widget="onboarding">
+                                <h4>👋 Onboarding Widget</h4>
+                                <p>User onboarding checklist</p>
+                                <button class="btn-small preview-widget">Preview</button>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <!-- Preview View -->
+            <div class="view" id="preview-view">
+                <div class="view-header">
+                    <h2>Test Your Workflow</h2>
+                    <button class="btn btn-secondary" id="run-evals">Run Evaluations</button>
+                </div>
+
+                <div class="preview-container">
+                    <div class="workflow-visualizer">
+                        <div class="workflow-step" id="step-classifier">
+                            <div class="step-label">Classifier</div>
+                            <div class="step-status">⏳ Waiting</div>
+                        </div>
+                        <div class="workflow-arrow">→</div>
+                        <div class="workflow-step" id="step-agent">
+                            <div class="step-label">Agent</div>
+                            <div class="step-status">⏳ Waiting</div>
+                        </div>
+                        <div class="workflow-arrow">→</div>
+                        <div class="workflow-step" id="step-guardrails">
+                            <div class="step-label">Guardrails</div>
+                            <div class="step-status">⏳ Waiting</div>
+                        </div>
+                        <div class="workflow-arrow">→</div>
+                        <div class="workflow-step" id="step-response">
+                            <div class="step-label">Response</div>
+                            <div class="step-status">⏳ Waiting</div>
+                        </div>
+                    </div>
+
+                    <div class="test-interface">
+                        <div class="chat-messages" id="chat-messages"></div>
+                        <div class="chat-input-container">
+                            <input type="text" id="test-input" placeholder="Type a message to test your workflow..." class="chat-input">
+                            <button class="btn btn-primary" id="send-test">Send</button>
+                        </div>
+                    </div>
+
+                    <div class="eval-results" id="eval-results" style="display: none;">
+                        <h3>Evaluation Results</h3>
+                        <div id="eval-content"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Published View -->
+            <div class="view" id="published-view">
+                <div class="view-header">
+                    <h2>Published Workflows</h2>
+                    <button class="btn btn-primary" id="publish-workflow">Publish Current Workflow</button>
+                </div>
+
+                <div class="published-list" id="published-list">
+                    <p class="empty-state">No published workflows yet. Create and publish your first workflow!</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Widget Preview Modal -->
+    <div class="modal" id="widget-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">Widget Preview</h3>
+                <button class="modal-close" id="close-modal">×</button>
+            </div>
+            <div class="modal-body" id="modal-body"></div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/websim-socket@latest/dist/websim.min.js"></script>
+    <script src="widget-library.js"></script>
+    <script src="agent-builder.js"></script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"4c6229722a6346bc8eb5cb0e5eae5d41","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+</body>
+</html>
+
